@@ -151,73 +151,74 @@ export default class CircularSlider extends PureComponent {
   }
 
   simpleLinearGradientRender = () => {
-    const { startAngle, angleLength, radius, gradientColorFrom, gradientColorTo } = this.props;
-    let totalAngle = Math.PI * 2
-    if (angleLength - startAngle > Math.PI)  {
-      let firstPositions = calculateArcCircle(0, 2, radius, startAngle, angleLength);
-      let firstColors = colorBasedOnPercentage(startAngle / totalAngle, (startAngle + Math.PI) / totalAngle, gradientColorFrom, gradientColorTo)
-      let secondPositions = calculateArcCircle(1, 2, radius, startAngle, angleLength);
-      let secondColors = colorBasedOnPercentage((startAngle + Math.PI) / totalAngle, angleLength / totalAngle, gradientColorFrom, gradientColorTo)
-      return [
-        <LinearGradient key={0} id={getGradientId(0)} x1={firstPositions.fromX.toFixed(2)} y1={firstPositions.fromY.toFixed(2)} x2={firstPositions.toX.toFixed(2)} y2={firstPositions.toY.toFixed(2)}>
-          <Stop offset="0%" stopColor={firstColors.fromColor} />
-          <Stop offset="1" stopColor={firstColors.toColor} />
-        </LinearGradient>,
-        <LinearGradient key={1} id={getGradientId(1)} x1={secondPositions.fromX.toFixed(2)} y1={secondPositions.fromY.toFixed(2)} x2={secondPositions.toX.toFixed(2)} y2={secondPositions.toY.toFixed(2)}>
-          <Stop offset="0%" stopColor={secondColors.fromColor} />
-          <Stop offset="1" stopColor={secondColors.toColor} />
-        </LinearGradient>
-      ]
-    } else {
-      const { fromX, fromY, toX, toY } = calculateArcCircle(0, 1, radius, startAngle, angleLength);
-      const { fromColor, toColor } = colorBasedOnPercentage(startAngle / totalAngle, angleLength / totalAngle, gradientColorFrom, gradientColorTo)
-      return (
-        <LinearGradient key={0} id={getGradientId(0)} x1={fromX.toFixed(2)} y1={fromY.toFixed(2)} x2={toX.toFixed(2)} y2={toY.toFixed(2)}>
-          <Stop offset="0%" stopColor={fromColor} />
-          <Stop offset="1" stopColor={toColor} />
-        </LinearGradient>
-      )
-    }
+      const { startAngle, angleLength, radius, gradientColorFrom, gradientColorTo } = this.props;
+      let totalAngle = Math.PI * 2
+      if (angleLength - startAngle > Math.PI)  {
+        let firstPositions = calculateArcCircle(0, 2, radius, startAngle, angleLength);
+        let firstColors = colorBasedOnPercentage(startAngle / totalAngle, (startAngle + Math.PI) / totalAngle, gradientColorFrom, gradientColorTo)
+        let secondPositions = calculateArcCircle(1, 2, radius, startAngle, angleLength);
+        let secondColors = colorBasedOnPercentage((startAngle + Math.PI) / totalAngle, angleLength / totalAngle, gradientColorFrom, gradientColorTo)
+        return [
+          <LinearGradient key={0} id={getGradientId(0)} x1={firstPositions.fromX.toFixed(2)} y1={firstPositions.fromY.toFixed(2)} x2={firstPositions.toX.toFixed(2)} y2={firstPositions.toY.toFixed(2)}>
+            <Stop offset="0%" stopColor={firstColors.fromColor} />
+            <Stop offset="1" stopColor={firstColors.toColor} />
+          </LinearGradient>,
+          <LinearGradient key={1} id={getGradientId(1)} x1={secondPositions.fromX.toFixed(2)} y1={secondPositions.fromY.toFixed(2)} x2={secondPositions.toX.toFixed(2)} y2={secondPositions.toY.toFixed(2)}>
+            <Stop offset="0%" stopColor={secondColors.fromColor} />
+            <Stop offset="1" stopColor={secondColors.toColor} />
+          </LinearGradient>
+        ]
+      } else {
+        const { fromX, fromY, toX, toY } = calculateArcCircle(0, 2, radius, startAngle, angleLength);
+        console.tron.log(startAngle / totalAngle);
+        const { fromColor, toColor } = colorBasedOnPercentage(startAngle / totalAngle, (startAngle + Math.PI) / totalAngle, gradientColorFrom, gradientColorTo)
+        return (
+          <LinearGradient key={0} id={getGradientId(0)} x1={fromX.toFixed(2)} y1={fromY.toFixed(2)} x2={toX.toFixed(2)} y2={toY.toFixed(2)}>
+            <Stop offset="0%" stopColor={fromColor} />
+            <Stop offset="1" stopColor={toColor} />
+          </LinearGradient>
+        )
+      }
   }
 
   simplePathRender = () => {
-    const { startAngle, angleLength, strokeWidth, radius, gradientColorFrom, gradientColorTo } = this.props;
+      const { startAngle, angleLength, strokeWidth, radius, gradientColorFrom, gradientColorTo } = this.props;
 
-    if (angleLength > Math.PI)  {
-      let firstPositions = calculateArcCircle(0, 2, radius, startAngle, angleLength);
-      let firstD = `M ${firstPositions.fromX.toFixed(2)} ${firstPositions.fromY.toFixed(2)} A ${radius} ${radius} 0 0 1 ${firstPositions.toX.toFixed(2)} ${firstPositions.toY.toFixed(2)}`;
-      let secondPositions = calculateArcCircle(1, 2, radius, startAngle, angleLength);
-      let secondD = `M ${secondPositions.fromX.toFixed(2)} ${secondPositions.fromY.toFixed(2)} A ${radius} ${radius} 0 0 1 ${secondPositions.toX.toFixed(2)} ${secondPositions.toY.toFixed(2)}`;
-      return [
-        <Path
-          d={firstD}
-          key={0}
-          strokeWidth={strokeWidth}
-          stroke={`url(#${getGradientId(0)})`}
-          fill="transparent"
-        />,
-        <Path
-          d={secondD}
-          key={1}
-          strokeWidth={strokeWidth}
-          stroke={`url(#${getGradientId(1)})`}
-          fill="transparent"
-        />
-      ]
-    } else {
-      const { fromX, fromY, toX, toY } = calculateArcCircle(0, 1, radius, startAngle, angleLength);
-      const d = `M ${fromX.toFixed(2)} ${fromY.toFixed(2)} A ${radius} ${radius} 0 0 1 ${toX.toFixed(2)} ${toY.toFixed(2)}`;
+      if (angleLength > Math.PI )  {
+        let firstPositions = calculateArcCircle(0, 2, radius, startAngle, angleLength);
+        let firstD = `M ${firstPositions.fromX.toFixed(2)} ${firstPositions.fromY.toFixed(2)} A ${radius} ${radius} 0 0 1 ${firstPositions.toX.toFixed(2)} ${firstPositions.toY.toFixed(2)}`;
+        let secondPositions = calculateArcCircle(1, 2, radius, startAngle, angleLength);
+        let secondD = `M ${secondPositions.fromX.toFixed(2)} ${secondPositions.fromY.toFixed(2)} A ${radius} ${radius} 0 0 1 ${secondPositions.toX.toFixed(2)} ${secondPositions.toY.toFixed(2)}`;
+        return [
+          <Path
+            d={firstD}
+            key={0}
+            strokeWidth={strokeWidth}
+            stroke={`url(#${getGradientId(0)})`}
+            fill="transparent"
+          />,
+          <Path
+            d={secondD}
+            key={1}
+            strokeWidth={strokeWidth}
+            stroke={`url(#${getGradientId(1)})`}
+            fill="transparent"
+          />
+        ]
+      } else {
+        const { fromX, fromY, toX, toY } = calculateArcCircle(0, 1, radius, startAngle, angleLength);
+        const d = `M ${fromX.toFixed(2)} ${fromY.toFixed(2)} A ${radius} ${radius} 0 0 1 ${toX.toFixed(2)} ${toY.toFixed(2)}`;
 
-      return (
-        <Path
-          d={d}
-          key={0}
-          strokeWidth={strokeWidth}
-          stroke={`url(#${getGradientId(0)})`}
-          fill="transparent"
-        />
-      )
-    }
+        return (
+          <Path
+            d={d}
+            key={0}
+            strokeWidth={strokeWidth}
+            stroke={`url(#${getGradientId(0)})`}
+            fill="transparent"
+          />
+        )
+      }
   }
 
   render() {
