@@ -170,7 +170,6 @@ export default class CircularSlider extends PureComponent {
         ]
       } else {
         const { fromX, fromY, toX, toY } = calculateArcCircle(0, 2, radius, startAngle, angleLength);
-        console.tron.log(startAngle / totalAngle);
         const { fromColor, toColor } = colorBasedOnPercentage(startAngle / totalAngle, (startAngle + Math.PI) / totalAngle, gradientColorFrom, gradientColorTo)
         return (
           <LinearGradient key={0} id={getGradientId(0)} x1={fromX.toFixed(2)} y1={fromY.toFixed(2)} x2={toX.toFixed(2)} y2={toY.toFixed(2)}>
