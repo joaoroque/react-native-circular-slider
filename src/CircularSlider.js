@@ -16,6 +16,15 @@ function calculateArcColor(index0, segments, gradientColorFrom, gradientColorTo)
   }
 }
 
+function colorBasedOnPercentage(percentageStart, percentageEnd, gradientColorFrom, gradientColorTo) {
+  const interpolate = interpolateGradient(gradientColorFrom, gradientColorTo);
+
+  return {
+    fromColor: interpolate(percentageStart),
+    toColor: interpolate(percentageEnd),
+  }
+}
+
 function calculateArcCircle(index0, segments, radius, startAngle0 = 0, angleLength0 = 2 * Math.PI) {
   // Add 0.0001 to the possible angle so when start = stop angle, whole circle is drawn
   const startAngle = startAngle0 % (2 * Math.PI);
@@ -65,7 +74,7 @@ export default class CircularSlider extends PureComponent {
   }
 
   static defaultProps = {
-    segments: 5,
+    segments: 0,
     strokeWidth: 40,
     radius: 145,
     gradientColorFrom: '#ff9800',
@@ -143,11 +152,12 @@ export default class CircularSlider extends PureComponent {
 
   simpleLinearGradientRender = () => {
     const { startAngle, angleLength, radius, gradientColorFrom, gradientColorTo } = this.props;
-    if (angleLength > Math.PI)  {
+    let totalAngle = Math.PI * 2
+    if (angleLength - startAngle > Math.PI)  {
       let firstPositions = calculateArcCircle(0, 2, radius, startAngle, angleLength);
-      let firstColors = calculateArcColor(0, 2, gradientColorFrom, gradientColorTo)
+      let firstColors = colorBasedOnPercentage(startAngle / totalAngle, (startAngle + Math.PI) / totalAngle, gradientColorFrom, gradientColorTo)
       let secondPositions = calculateArcCircle(1, 2, radius, startAngle, angleLength);
-      let secondColors = calculateArcColor(1, 2, gradientColorFrom, gradientColorTo)
+      let secondColors = colorBasedOnPercentage((startAngle + Math.PI) / totalAngle, angleLength / totalAngle, gradientColorFrom, gradientColorTo)
       return [
         <LinearGradient key={0} id={getGradientId(0)} x1={firstPositions.fromX.toFixed(2)} y1={firstPositions.fromY.toFixed(2)} x2={firstPositions.toX.toFixed(2)} y2={firstPositions.toY.toFixed(2)}>
           <Stop offset="0%" stopColor={firstColors.fromColor} />
@@ -160,7 +170,7 @@ export default class CircularSlider extends PureComponent {
       ]
     } else {
       const { fromX, fromY, toX, toY } = calculateArcCircle(0, 1, radius, startAngle, angleLength);
-      const { fromColor, toColor } = calculateArcColor(0, 2, gradientColorFrom, gradientColorTo)
+      const { fromColor, toColor } = colorBasedOnPercentage(startAngle / totalAngle, angleLength / totalAngle, gradientColorFrom, gradientColorTo)
       return (
         <LinearGradient key={0} id={getGradientId(0)} x1={fromX.toFixed(2)} y1={fromY.toFixed(2)} x2={toX.toFixed(2)} y2={toY.toFixed(2)}>
           <Stop offset="0%" stopColor={fromColor} />
